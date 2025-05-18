@@ -20,7 +20,7 @@ function rewriteToOriginalLinks($, baseUrl) {
     const val = $(el).attr(attr);
     if (!val || val.startsWith('http') || val.startsWith('data:')) return;
 
-    // Normalize relative and root-relative paths
+    // Convert relative links to absolute
     if (val.startsWith('/')) {
       $(el).attr(attr, baseUrl + val);
     } else {
