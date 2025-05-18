@@ -18,12 +18,18 @@ function rewriteToOriginalLinks($, baseUrl) {
     if (!attr) return;
 
     const val = $(el).attr(attr);
-    if (!val || val.startsWith('http') || val.startsWith('data:')) return;
+    if (!val || val.startsWith('http') || val.startsWith('data:')) {
+      return; // already absolute or safe
+    }
 
-    // Convert relative links to absolute
-    if (val.startsWith('/')) {
+    if (val.startsWith('//')) {
+      // Protocol-relative URLs (e.g., //cdn.foxnews.com)
+      $(el).attr(attr, 'https:' + val);
+    } else if (val.startsWith('/')) {
+      // Root-relative URL → add base domain
       $(el).attr(attr, baseUrl + val);
     } else {
+      // Relative path (e.g. "styles/main.css") → treat as base + path
       const base = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
       $(el).attr(attr, base + val);
     }
