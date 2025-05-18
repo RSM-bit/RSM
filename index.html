@@ -16,13 +16,24 @@
       width: 100%;
       height: 100%;
     }
+    .disclaimer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.8);
+      color: #ccc;
+      font-size: 12px;
+      text-align: center;
+      padding: 5px 10px;
+      z-index: 9999;
+    }
   </style>
 </head>
 <body>
-  <iframe
-    src="https://rsm-production.up.railway.app"
-    id="russian-state-media"
-    title="Russian State Media Mirror"
-  ></iframe>
+  <iframe src="https://rsm-production.up.railway.app" id="Russian State Media"></iframe>
+  <div class="disclaimer">
+    <em>Disclaimer:</em> This site is a parody and is not affiliated with Fox News or any associated entity. Content shown is live from foxnews.com for satire purposes only.
+  </div>
 </body>
 </html>
