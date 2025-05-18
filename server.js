@@ -20,35 +20,43 @@ const TARGET_URL = 'https://www.foxnews.com'; // ← MUST include www
 // Rewrites all relative href/src links to point to the original site
 function rewriteToOriginalLinks($, baseUrl) {
   $('a[href]').each((_, el) => {
-    const href = $(el).attr('href');
+    let href = $(el).attr('href');
+    if (!href || href.startsWith('javascript:') || href.startsWith('#')) return;
 
-    if (!href || href.startsWith('javascript:')) return;
-
-    // Convert relative URLs to absolute
-    if (href.startsWith('/')) {
-      $(el).attr('href', baseUrl + href);
-    } else if (!href.startsWith('http') && !href.startsWith('data:')) {
-      const base = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
-      $(el).attr('href', base + href);
+    // Skip if already fully qualified and matches base domain
+    if (href.startsWith('http') || href.startsWith('//')) {
+      $(el).attr('target', '_top');
+      return;
     }
 
-    // 🚀 Force all links to open in top window (escape iframe)
+    // Make absolute
+    if (href.startsWith('/')) {
+      href = baseUrl + href;
+    } else {
+      const base = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+      href = base + href;
+    }
+
+    $(el).attr('href', href);
     $(el).attr('target', '_top');
   });
 
-  // Optionally fix other resources
-  $('[src], [href]').each((_, el) => {
-    const attr = el.attribs.href ? 'href' : 'src';
-    const val = $(el).attr(attr);
+  // Fix resource paths (src/href for css, js, images)
+  $('[src], link[href]').each((_, el) => {
+    const attr = el.attribs.src ? 'src' : el.attribs.href ? 'href' : null;
+    if (!attr) return;
 
-    if (!val || val.startsWith('http') || val.startsWith('data:')) return;
+    let val = $(el).attr(attr);
+    if (!val || val.startsWith('http') || val.startsWith('//') || val.startsWith('data:')) return;
 
     if (val.startsWith('/')) {
-      $(el).attr(attr, baseUrl + val);
+      val = baseUrl + val;
     } else {
       const base = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
-      $(el).attr(attr, base + val);
+      val = base + val;
     }
+
+    $(el).attr(attr, val);
   });
 }
 
