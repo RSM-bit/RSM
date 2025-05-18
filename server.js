@@ -44,7 +44,6 @@ app.get('/', async (req, res) => {
   }
 });
 
-const express = require('express');
 const app = express();
 const PORT = process.env.PORT;
 

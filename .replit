@@ -1,8 +1,8 @@
 modules = ["nodejs-20", "web"]
-run = "npm install"
+run = "node server.js"   # ← or node index.js if that's your main file
 
 [nix]
 channel = "stable-24_05"
 
 [deployment]
-run = ["sh", "-c", "npm install"]
+run = ["sh", "-c", "node server.js"]  # ← same change here
