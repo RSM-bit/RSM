@@ -2,6 +2,9 @@ const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const app = express();
+const cors = require('cors');
+app.use(cors()); // ← Allow all origins by default
+
 
 // 🔧 Change this to the single page you want to mirror
 const TARGET_URL = 'https://foxnews.com'; // ← Change this
