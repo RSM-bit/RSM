@@ -41,7 +41,10 @@ app.get('/', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT;
+
 app.listen(PORT, () => {
-  console.log(`📄 Serving mirrored page of ${TARGET_URL} on http://localhost:${PORT}`);
+  console.log(`Server running on ${PORT}`);
 });
