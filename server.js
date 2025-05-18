@@ -19,28 +19,39 @@ const TARGET_URL = 'https://www.foxnews.com'; // ← MUST include www
 
 // Rewrites all relative href/src links to point to the original site
 function rewriteToOriginalLinks($, baseUrl) {
-  $('[href], [src]').each((_, el) => {
-    const attr = el.attribs.href ? 'href' : el.attribs.src ? 'src' : null;
-    if (!attr) return;
+  $('a[href]').each((_, el) => {
+    const href = $(el).attr('href');
 
-    const val = $(el).attr(attr);
-    if (!val || val.startsWith('http') || val.startsWith('data:')) {
-      return; // already absolute or safe
+    if (!href || href.startsWith('javascript:')) return;
+
+    // Convert relative URLs to absolute
+    if (href.startsWith('/')) {
+      $(el).attr('href', baseUrl + href);
+    } else if (!href.startsWith('http') && !href.startsWith('data:')) {
+      const base = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+      $(el).attr('href', base + href);
     }
 
-    if (val.startsWith('//')) {
-      // Protocol-relative URLs (e.g., //cdn.foxnews.com)
-      $(el).attr(attr, 'https:' + val);
-    } else if (val.startsWith('/')) {
-      // Root-relative URL → add base domain
+    // 🚀 Force all links to open in top window (escape iframe)
+    $(el).attr('target', '_top');
+  });
+
+  // Optionally fix other resources
+  $('[src], [href]').each((_, el) => {
+    const attr = el.attribs.href ? 'href' : 'src';
+    const val = $(el).attr(attr);
+
+    if (!val || val.startsWith('http') || val.startsWith('data:')) return;
+
+    if (val.startsWith('/')) {
       $(el).attr(attr, baseUrl + val);
     } else {
-      // Relative path (e.g. "styles/main.css") → treat as base + path
       const base = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
       $(el).attr(attr, base + val);
     }
   });
 }
+
 
 app.get('/', async (req, res) => {
   try {
