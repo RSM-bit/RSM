@@ -8,5 +8,5 @@ channel = "stable-24_05"
 run = ["sh", "-c", "node server.js"]  # ← same change here
 
 [[ports]]
-localPort = 43331
+localPort = 3000
 externalPort = 80
