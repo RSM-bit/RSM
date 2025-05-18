@@ -6,12 +6,10 @@ const cors = require('cors');
 
 const PORT = process.env.PORT || 3000; // Use fallback locally
 
-app.use(cors()); // Allow all origins
 app.use((req, res, next) => {
-  // Allow embedding from any origin
-  res.setHeader('X-Frame-Options', 'ALLOWALL'); // legacy support
-  res.setHeader('Content-Security-Policy', "frame-ancestors *"); // modern CSP
-  res.setHeader('Access-Control-Allow-Origin', '*'); // optional for API fetches
+  res.setHeader('X-Frame-Options', 'ALLOW-FROM https://www.russianstatemedia.com'); // legacy
+  res.setHeader('Content-Security-Policy', "frame-ancestors https://www.russianstatemedia.com"); // modern
+  res.setHeader('Access-Control-Allow-Origin', '*');
   next();
 });
 
