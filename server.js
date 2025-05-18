@@ -3,6 +3,8 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const app = express();
 const cors = require('cors');
+const PORT = process.env.PORT;
+
 app.use(cors()); // ← Allow all origins by default
 
 
@@ -44,8 +46,6 @@ app.get('/', async (req, res) => {
   }
 });
 
-const app = express();
-const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
