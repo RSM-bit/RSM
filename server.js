@@ -7,6 +7,14 @@ const cors = require('cors');
 const PORT = process.env.PORT || 3000; // Use fallback locally
 
 app.use(cors()); // Allow all origins
+app.use((req, res, next) => {
+  // Allow embedding from any origin
+  res.setHeader('X-Frame-Options', 'ALLOWALL'); // legacy support
+  res.setHeader('Content-Security-Policy', "frame-ancestors *"); // modern CSP
+  res.setHeader('Access-Control-Allow-Origin', '*'); // optional for API fetches
+  next();
+});
+
 
 // 🔧 Page you want to mirror
 const TARGET_URL = 'https://www.foxnews.com'; // ← MUST include www
